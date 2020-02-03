@@ -1,0 +1,9 @@
+@import "tailwindcss/tailwind";
+@import "tailwindcss/components";
+@import url('https://fonts.googleapis.com/css?family=Raleway:300,500&display=swap');
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Raleway', sans-serif;
+}
