@@ -1,12 +1,10 @@
 import React from 'react'
+import StepTitle from './StepTitle'
 
 export default function SymptomsStep(props) {
     return (
-        <div className={"text-center font-bold text-3xl uppercase mx-auto"} style={{ maxWidth: "70%"}}>
-            {/* TODO: Create StepTitle.tsx */}
-            <div className={"my-2 text-center font-bold text-2xl uppercase"}>
-                What symptoms do you have?
-            </div>
+        <div className={"text-center mx-auto"} style={{ maxWidth: "70%"}}>
+            <StepTitle>What symptoms do you have?</StepTitle>
 
             <div className={"flex"}>
                 {Object.entries(props.symptoms).map(([key, value]) => (
