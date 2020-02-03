@@ -7,3 +7,15 @@ body {
   margin: 0;
   font-family: 'Raleway', sans-serif;
 }
+
+.hover-icon-wrapper .icon-active {
+  opacity: 0;
+}
+
+.hover-icon-wrapper:hover .icon-active {
+  opacity: 1;
+}
+
+.active-icon-wrapper .icon-active {
+  opacity: 1;
+}

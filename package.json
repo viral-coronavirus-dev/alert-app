@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.7.6",
+    "core-js": "^3.6.4",
     "meteor-node-stubs": "^1.0.0",
     "rc-steps": "^3.5.0",
     "react": "^16.9.0",

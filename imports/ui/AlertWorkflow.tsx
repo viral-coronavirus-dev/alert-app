@@ -5,7 +5,7 @@ import Button from './components/Button'
 
 const isContinueButtonDisabled = [
     // Symptoms
-    ({ symptoms }) => (!Object.values(symptoms)
+    ({symptoms}) => (!Object.values(symptoms)
         .map(s => s.value)
         .some(s => s)),
     () => true,
@@ -15,10 +15,10 @@ export default class AlertWorkflow extends React.Component {
     state = {
         pageIndex: 0,
         symptoms: {
-            fever: {title: 'Fever', value: false},
-            cough: {title: 'Cough', value: false},
-            shortness_of_breath: {title: 'Shortness of breath', value: false},
-            runny_nose: {title: 'Runny Nose', value: false},
+            fever: {icon: 'fever', title: 'Fever', value: false},
+            cough: {icon: 'cough', title: 'Cough', value: false},
+            shortness_of_breath: {icon: 'lung', title: 'Shortness of breath', value: false},
+            runny_nose: {icon: 'nose', title: 'Runny Nose', value: false},
         },
     }
 
@@ -56,7 +56,7 @@ export default class AlertWorkflow extends React.Component {
                     <div className={"mt-4 text-center"}>
                         <Button onClick={() => this.nextPage()}
                                 color={continueIsDisabled ? "gray-400" : 'green-500'}
-                                disabled={continueIsDisabled} >Continue</Button>
+                                disabled={continueIsDisabled}>Continue</Button>
                     </div>
                 </div>
             </div>
