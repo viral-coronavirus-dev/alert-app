@@ -10,6 +10,7 @@
   "dependencies": {
     "@babel/runtime": "^7.7.6",
     "meteor-node-stubs": "^1.0.0",
+    "rc-steps": "^3.5.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "tailwindcss": "^1.1.4"

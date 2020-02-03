@@ -19,7 +19,7 @@ export default class Map extends React.Component {
             defaultLayers.vector.normal.map,
             {
                 zoom: 4,
-                center: { lat:34.26, lng:100.71 }
+                center: { lat: 20.20, lng: 100.71 }
             })
 
         window.addEventListener('resize', function () {
