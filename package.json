@@ -16,7 +16,8 @@
     "rc-steps": "^3.5.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "tailwindcss": "^1.1.4"
+    "tailwindcss": "^1.1.4",
+    "twilio": "^3.39.3"
   },
   "devDependencies": {
     "@types/meteor": "^1.4.30",

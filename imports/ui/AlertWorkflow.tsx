@@ -1,8 +1,8 @@
 import React from 'react'
 import phone from 'phone'
 import Steps from 'rc-steps'
-import { Meteor } from 'meteor/meteor'
-import { get, mapValues } from 'lodash/fp'
+import {Meteor} from 'meteor/meteor'
+import {get, mapValues} from 'lodash/fp'
 import SymptomsStep from './steps/SymptomsStep'
 import PhoneNumberStep from './steps/PhoneNumberStep'
 import TwoFactorAuthStep from './steps/TwoFactorAuthStep'
@@ -16,11 +16,11 @@ const isContinueButtonDisabled = [
         .map(s => s.value)
         .some(s => s)),
     // Phone Number
-    ({ phoneNumber }) => !phoneNumber,
+    ({phoneNumber}) => !phoneNumber,
     // Two Factor Auth
-    ({ succesfullyAuthenticated }) => !succesfullyAuthenticated,
+    ({succesfullyAuthenticated}) => !succesfullyAuthenticated,
     // Address Form
-    ({ address: { fullName, address, city, country, emailAddress } }) => {
+    ({address: {fullName, address, city, country, emailAddress}}) => {
         return !(([
             fullName.length > 0,
             address.length > 0,
@@ -44,6 +44,7 @@ export default class AlertWorkflow extends React.Component {
         },
         phoneNumber: '',
         succesfullyAuthenticated: false,
+        twoFactorCode: '',
         address: {
             fullName: '',
             address: '',
@@ -62,7 +63,7 @@ export default class AlertWorkflow extends React.Component {
     }
 
     render() {
-        const {pageIndex, symptoms, phoneNumber, address} = this.state
+        const {pageIndex, symptoms, phoneNumber, address, twoFactorCode} = this.state
 
         const continueIsDisabled = isContinueButtonDisabled[pageIndex](this.state)
 
@@ -71,6 +72,7 @@ export default class AlertWorkflow extends React.Component {
                 symptoms: mapValues(get('value'))(symptoms),
                 ...address,
                 phoneNumber,
+                twoFactorCode,
             })
         }
 
@@ -96,19 +98,25 @@ export default class AlertWorkflow extends React.Component {
                         {pageIndex === 1 ? (<PhoneNumberStep onChange={(phoneNumber) => {
                             this.setState(state => {
                                 const [formattedNumber] = phone(phoneNumber)
-                                console.log(phoneNumber, typeof phoneNumber, formattedNumber)
+
                                 state.phoneNumber = formattedNumber
                                 return state
                             })
                         }}/>) : ''}
 
                         {pageIndex === 2 ? (<TwoFactorAuthStep phoneNumber={phoneNumber}
-                                                               onAuthenticated={(succesful) => {
-                            this.setState(state => {
-                                state.succesfullyAuthenticated = succesful
-                                return state
-                            })
-                        }}/>) : ''}
+                                                               onAuthenticated={({approved, twoFactorCode}) => {
+                                                                   this.setState(state => {
+                                                                       state.succesfullyAuthenticated = approved
+                                                                       state.twoFactorCode = twoFactorCode
+
+                                                                       return state
+                                                                   })
+
+                                                                   if (approved) {
+                                                                       this.nextPage()
+                                                                   }
+                                                               }}/>) : ''}
 
                         {pageIndex === 3 ? (<AddressStep address={address} onChange={(field, value) => {
                             this.setState(state => {
@@ -117,10 +125,10 @@ export default class AlertWorkflow extends React.Component {
                             })
                         }}/>) : ''}
 
-                        {pageIndex === 4 ? (<RequestAccepted />) : ''}
+                        {pageIndex === 4 ? (<RequestAccepted/>) : ''}
                     </div>
 
-                    <div className={"mt-4 text-center"} style={{ display: (pageIndex === 4 ? 'none' : 'inherit') }}>
+                    <div className={"mt-4 text-center"} style={{display: ([2,4].includes(pageIndex) ? 'none' : 'inherit')}}>
                         <Button onClick={() => this.nextPage(continueIsDisabled)}
                                 color={continueIsDisabled ? "gray-400" : 'green-500'}
                                 disabled={continueIsDisabled}>Continue</Button>
