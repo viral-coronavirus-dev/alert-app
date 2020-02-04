@@ -8,6 +8,7 @@ import verificationService from '../imports/credentials/twilio/verification-serv
 
 const twilioClient = twilio(twilioCredentials.sid, twilioCredentials.auth_token)
 
+// TODO: Create a cache collection called AuthenticatedTokens for checking the token twice.
 function checkTwilioToken({phoneNumber, code}) {
     //return new Promise(res => res({approved: true}))
 
@@ -16,9 +17,14 @@ function checkTwilioToken({phoneNumber, code}) {
             .verificationChecks
             .create({to: phoneNumber, code})
             .then((verificationCheck) => {
+                console.log('in here or smth')
+                console.log(verificationCheck)
                 resolve({approved: verificationCheck.status === 'approved'})
             })
-            .catch(reject)
+            .catch((...errs) => {
+                console.log(errs)
+                reject(JSON.stringify(errs))
+            })
     })
 }
 
@@ -63,15 +69,22 @@ Meteor.methods({
 
         const {phoneNumber, twoFactorCode} = data
 
+        // FIXME Checking a working token doesn't work twice for logical reason
         return new Promise((resolve, reject) => {
             checkTwilioToken({ phoneNumber, code: twoFactorCode })
                 .then((verificationCheck) => {
+                    console.log(verificationCheck)
                     if (verificationCheck.approved) {
+                        console.log('checking phone number')
+
+                        console.log(Requests.findOne({ phoneNumber }))
                         if (!Requests.findOne({ phoneNumber })) {
+                            console.log('insert request')
                             Requests.insert(omit(['twoFactorCode'])(data))
                         }
 
-                        resolve({ approved: true })
+                        console.log('resolve')
+                        resolve({ approved: verificationCheck.approved })
                     }
                 })
                 .catch(reject)
