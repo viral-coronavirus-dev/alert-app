@@ -8,7 +8,7 @@ export default function SymptomsStep(props) {
 
             <div className={"flex"}>
                 {Object.entries(props.symptoms).map(([key, value]) => (
-                    <div key={key} className={"inline-block w-1/4"}>
+                    <div key={key} className={"w-1/2 lg-w-1/4"}>
                         <div className={"block cursor-pointer"} onClick={() => props.onClick(key, value)}>
                             <div className={`
                                         ${value.value ? 'bg-green-500 text-white active-icon-wrapper' : 'bg-white text-green-500'} 
