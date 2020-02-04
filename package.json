@@ -17,6 +17,8 @@
     "rc-steps": "^3.5.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
+    "react-select": "^3.0.8",
+    "react-select-country-list": "^2.1.2",
     "tailwindcss": "^1.1.4",
     "twilio": "^3.39.3"
   },

@@ -26,10 +26,10 @@ const isContinueButtonDisabled = [
     // Address Form
     ({address: {fullName, address, city, country, emailAddress}}) => {
         return !(([
-            fullName.length > 3,
-            address.length > 3,
-            city.length > 3,
-            country.length > 3,
+            fullName.length >= 3,
+            address.length >= 3,
+            city.length >= 3,
+            country.length > 0,
             isEmail(emailAddress),
         ]).every(s => s))
     },
