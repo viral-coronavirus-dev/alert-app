@@ -24,10 +24,6 @@ body {
   opacity: 0;
 }
 
-.hover-icon-wrapper:hover .icon-active {
-  opacity: 1;
-}
-
 .active-icon-wrapper .icon-active {
   opacity: 1;
 }

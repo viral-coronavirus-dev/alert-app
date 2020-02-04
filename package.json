@@ -5,7 +5,8 @@
     "start": "meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
-    "visualize": "meteor --production --extra-packages bundle-visualizer"
+    "visualize": "meteor --production --extra-packages bundle-visualizer",
+    "deploy": "DEPLOY_HOSTNAME=ap-southeast-2.galaxy-deploy.meteor.com meteor deploy app.viralsupport.me --owner viralcoronavirus --settings private/settings/prod-settings.json"
   },
   "dependencies": {
     "@babel/runtime": "^7.7.6",

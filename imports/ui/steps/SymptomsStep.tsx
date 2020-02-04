@@ -12,7 +12,7 @@ export default function SymptomsStep(props) {
                         <div className={"block cursor-pointer"} onClick={() => props.onClick(key, value)}>
                             <div className={`
                                         ${value.value ? 'bg-green-500 text-white active-icon-wrapper' : 'bg-white text-green-500'} 
-                                        hover:bg-green-500 hover:text-white rounded-full mx-auto hover-icon-wrapper symptom-icon
+                                         rounded-full mx-auto hover-icon-wrapper symptom-icon
                                     `}>
                                 <div className={"relative mx-auto"}>
                                     <img className={"absolute top-0 left-0 icon"} src={`/icons/${value.icon}.svg`} />
