@@ -1,6 +1,7 @@
 import React from 'react'
 import phone from 'phone'
 import Steps from 'rc-steps'
+import isEmail from 'is-email'
 import {Meteor} from 'meteor/meteor'
 import {get, mapValues} from 'lodash/fp'
 import SymptomsStep from './steps/SymptomsStep'
@@ -10,6 +11,9 @@ import AddressStep from './steps/AddressStep'
 import RequestAccepted from './steps/RequestAccepted'
 import Button from './components/Button'
 
+// TODO: add country select
+// TODO: simple responsive design
+// TODO: create github issues
 const isContinueButtonDisabled = [
     // Symptoms
     ({symptoms}) => (!Object.values(symptoms)
@@ -22,11 +26,11 @@ const isContinueButtonDisabled = [
     // Address Form
     ({address: {fullName, address, city, country, emailAddress}}) => {
         return !(([
-            fullName.length > 0,
-            address.length > 0,
-            city.length > 0,
-            country.length > 0,
-            emailAddress.length > 0
+            fullName.length > 3,
+            address.length > 3,
+            city.length > 3,
+            country.length > 3,
+            isEmail(emailAddress),
         ]).every(s => s))
     },
     // Request Accepted
