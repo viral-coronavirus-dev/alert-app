@@ -1,6 +1,7 @@
 import React from 'react'
 import StepTitle from './StepTitle'
 import Input from '../components/Input'
+import CountrySelect from '../components/CountrySelect'
 
 export default function AddressStep(props) {
     return (
@@ -36,12 +37,8 @@ export default function AddressStep(props) {
                             />
                         </div>
 
-                        <div className="w-full mt-3 lg:mt-0 lg:w-1/2 pl-0 lg:pl-1">
-                            <Input
-                                placeholder={"Country"}
-                                type={"text"}
-                                onChange={(e) => props.onChange('country', e.target.value)}
-                            />
+                        <div className="w-full mt-3 lg:mt-0 lg:w-1/2 pl-0 lg:pl-1 country-select">
+                            <CountrySelect onChange={({ value }) => props.onChange('country', value)} />
                         </div>
                     </div>
 
