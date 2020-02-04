@@ -42,11 +42,16 @@ export default function TwoFactorAuthStep(props) {
                                 onClick={() => {
                                     if (isValidCode) {
                                         Meteor.call('checkVerificationToken', {phoneNumber, code}, (err, result) => {
+                                            if (err) {
+                                                console.error(err)
+                                                return null
+                                            }
+
                                             setIsAuthenticated(result.approved)
                                             props.onAuthenticated({ approved: result.approved, twoFactorCode: code })
 
                                             if (!result.approved) {
-                                                // TODO: Better UI
+                                                // FIXME: Better UI
                                                 alert('Code was not approved!')
                                             }
                                         })
