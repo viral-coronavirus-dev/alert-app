@@ -11,7 +11,7 @@ export default function PhoneNumberStep(props) {
                 <form className={"w-full"} onSubmit={e => {
                     e.preventDefault()
                 }}>
-                    <Input type={"phone"} placeholder={"Phone number"} onChange={(e) => props.onChange(e.target.value)} />
+                    <Input type={"text"} placeholder={"Phone number"} onChange={(e) => props.onChange(e.target.value)} />
                 </form>
             </div>
         </div>

@@ -1,4 +1,5 @@
 import React from 'react'
+import phone from 'phone'
 import Steps from 'rc-steps'
 import { Meteor } from 'meteor/meteor'
 import { get, mapValues } from 'lodash/fp'
@@ -94,7 +95,9 @@ export default class AlertWorkflow extends React.Component {
 
                         {pageIndex === 1 ? (<PhoneNumberStep onChange={(phoneNumber) => {
                             this.setState(state => {
-                                state.phoneNumber = phoneNumber
+                                const [formattedNumber] = phone(phoneNumber)
+                                console.log(phoneNumber, typeof phoneNumber, formattedNumber)
+                                state.phoneNumber = formattedNumber
                                 return state
                             })
                         }}/>) : ''}
