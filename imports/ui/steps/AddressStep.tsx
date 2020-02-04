@@ -5,7 +5,7 @@ import CountrySelect from '../components/CountrySelect'
 
 export default function AddressStep(props) {
     return (
-        <div className={"text-center mx-auto"} style={{ maxWidth: "70%"}}>
+        <div className={"text-center mx-auto step-wrapper"}>
             <StepTitle>Your Address</StepTitle>
 
             <div className={"flex"}>

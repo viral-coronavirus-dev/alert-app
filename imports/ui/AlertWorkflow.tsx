@@ -11,7 +11,6 @@ import AddressStep from './steps/AddressStep'
 import RequestAccepted from './steps/RequestAccepted'
 import Button from './components/Button'
 
-// TODO: add country select
 // TODO: simple responsive design
 // TODO: create github issues
 const isContinueButtonDisabled = [
@@ -82,7 +81,7 @@ export default class AlertWorkflow extends React.Component {
 
         return (
             <div className={"fixed bottom-0 inset-y-auto text-black w-screen"}>
-                <div className={"bg-white mx-auto p-5 rounded-full rounded-b-none"} style={{maxWidth: "70%"}}>
+                <div className={"bg-white mb-10 lg:mb-0 mx-auto p-3 lg:p-5 shadow rounded-lg rounded-b-none lg:rounded-full lg:rounded-b-none"} style={{maxWidth: "70%"}}>
                     <div className="text-center" style={{display: 'none'}}>
                         <Steps current={pageIndex}>
                             <Steps.Step title="first"/>
@@ -132,7 +131,7 @@ export default class AlertWorkflow extends React.Component {
                         {pageIndex === 4 ? (<RequestAccepted/>) : ''}
                     </div>
 
-                    <div className={"mt-4 text-center"} style={{display: ([2,4].includes(pageIndex) ? 'none' : 'inherit')}}>
+                    <div className={"mt-3 mb-3 lg:mb-0 text-center"} style={{display: ([2,4].includes(pageIndex) ? 'none' : 'inherit')}}>
                         <Button onClick={() => this.nextPage(continueIsDisabled)}
                                 color={continueIsDisabled ? "gray-400" : 'green-500'}
                                 disabled={continueIsDisabled}>Continue</Button>

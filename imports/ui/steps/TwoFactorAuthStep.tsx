@@ -28,7 +28,7 @@ export default function TwoFactorAuthStep(props) {
     sendAuthenticationTokenOnce(phoneNumber)
 
     return (
-        <div className={"text-center mx-auto"} style={{maxWidth: "70%"}}>
+        <div className={"text-center mx-auto step-wrapper"}>
             <StepTitle>A 6-Digit Code has been sent to your phone</StepTitle>
 
             <div className={"flex"}>

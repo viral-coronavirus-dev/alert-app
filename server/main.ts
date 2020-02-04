@@ -9,7 +9,7 @@ import verificationService from '../imports/credentials/twilio/verification-serv
 const twilioClient = twilio(twilioCredentials.sid, twilioCredentials.auth_token)
 
 function checkTwilioToken({phoneNumber, code}) {
-    return new Promise(res => res({approved: true}))
+    //return new Promise(res => res({approved: true}))
 
     return new Promise((resolve, reject) => {
         twilioClient.verify.services(verificationService.sid)
@@ -26,7 +26,7 @@ Meteor.methods({
     sendVerificationToken(to) {
         check(to, String)
 
-        return new Promise(res => res(true))
+        //return new Promise(res => res(true))
 
         return new Promise((resolve, reject) => {
             twilioClient.verify.services(verificationService.sid)

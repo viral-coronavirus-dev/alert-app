@@ -31,3 +31,45 @@ body {
 .active-icon-wrapper .icon-active {
   opacity: 1;
 }
+
+/* Symptoms */
+.symptom-icon {
+  width: 150px;
+  height: 150px;
+  font-size: 82px;
+  padding-top: 14px;
+}
+
+.symptom-icon > div {
+  max-width: 90px;
+  top: 16px;
+}
+
+.step-wrapper {
+  max-width: 70%;
+}
+
+@media(max-width: 1400px) {
+  /* Reduce size to half */
+  .symptom-icon {
+    width: 75px;
+    height: 75px;
+    font-size: 41px;
+    padding-top: 7px;
+  }
+
+  .symptom-icon > div {
+    max-width: 45px;
+    top: 8px;
+  }
+
+  .step-wrapper {
+    max-width: 60%;
+  }
+}
+
+@media(max-width: 680px) {
+  .step-wrapper {
+    max-width: 80%;
+  }
+}
