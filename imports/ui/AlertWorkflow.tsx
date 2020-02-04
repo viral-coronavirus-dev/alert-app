@@ -11,8 +11,13 @@ import AddressStep from './steps/AddressStep'
 import RequestAccepted from './steps/RequestAccepted'
 import Button from './components/Button'
 
-// TODO: simple responsive design
-// TODO: create github issues
+/*
+    TODO: create github issues:
+     - Restrict MongoDB Access
+     - Only allow two factor auth for phone once a day?
+     - Better alert on wrong code
+     - Better form errors on invalid data
+*/
 const isContinueButtonDisabled = [
     // Symptoms
     ({symptoms}) => (!Object.values(symptoms)
