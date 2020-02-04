@@ -1,6 +1,12 @@
 import React from 'react'
 import Steps from 'rc-steps'
+import { Meteor } from 'meteor/meteor'
+import { get, mapValues } from 'lodash/fp'
 import SymptomsStep from './steps/SymptomsStep'
+import PhoneNumberStep from './steps/PhoneNumberStep'
+import TwoFactorAuthStep from './steps/TwoFactorAuthStep'
+import AddressStep from './steps/AddressStep'
+import RequestAccepted from './steps/RequestAccepted'
 import Button from './components/Button'
 
 const isContinueButtonDisabled = [
@@ -8,7 +14,22 @@ const isContinueButtonDisabled = [
     ({symptoms}) => (!Object.values(symptoms)
         .map(s => s.value)
         .some(s => s)),
-    () => true,
+    // Phone Number
+    ({ phoneNumber }) => !phoneNumber,
+    // Two Factor Auth
+    ({ succesfullyAuthenticated }) => !succesfullyAuthenticated,
+    // Address Form
+    ({ address: { fullName, address, city, country, emailAddress } }) => {
+        return !(([
+            fullName.length > 0,
+            address.length > 0,
+            city.length > 0,
+            country.length > 0,
+            emailAddress.length > 0
+        ]).every(s => s))
+    },
+    // Request Accepted
+    () => false,
 ]
 
 export default class AlertWorkflow extends React.Component {
@@ -20,18 +41,37 @@ export default class AlertWorkflow extends React.Component {
             shortness_of_breath: {icon: 'lung', title: 'Shortness of breath', value: false},
             runny_nose: {icon: 'nose', title: 'Runny Nose', value: false},
         },
+        phoneNumber: '',
+        succesfullyAuthenticated: false,
+        address: {
+            fullName: '',
+            address: '',
+            city: '',
+            country: '',
+            emailAddress: '',
+        }
     }
 
-    nextPage() {
-        this.setState({
-            pageIndex: this.state.pageIndex + 1
-        })
+    nextPage(isDisabled: boolean) {
+        if (!isDisabled) {
+            this.setState({
+                pageIndex: this.state.pageIndex + 1
+            })
+        }
     }
 
     render() {
-        const {pageIndex} = this.state
+        const {pageIndex, symptoms, phoneNumber, address} = this.state
 
         const continueIsDisabled = isContinueButtonDisabled[pageIndex](this.state)
+
+        if (pageIndex === 4) {
+            Meteor.call('addViralRequest', {
+                symptoms: mapValues(get('value'))(symptoms),
+                ...address,
+                phoneNumber,
+            })
+        }
 
         return (
             <div className={"fixed bottom-0 inset-y-auto text-black w-screen"}>
@@ -45,16 +85,40 @@ export default class AlertWorkflow extends React.Component {
                     </div>
 
                     <div>
-                        {pageIndex === 0 ? (<SymptomsStep symptoms={this.state.symptoms} onClick={(symptomId) => {
+                        {pageIndex === 0 ? (<SymptomsStep symptoms={symptoms} onClick={(symptomId) => {
                             this.setState(state => {
                                 state.symptoms[symptomId].value = !state.symptoms[symptomId].value
                                 return state
                             })
                         }}/>) : ''}
+
+                        {pageIndex === 1 ? (<PhoneNumberStep onChange={(phoneNumber) => {
+                            this.setState(state => {
+                                state.phoneNumber = phoneNumber
+                                return state
+                            })
+                        }}/>) : ''}
+
+                        {pageIndex === 2 ? (<TwoFactorAuthStep phoneNumber={phoneNumber}
+                                                               onAuthenticated={(succesful) => {
+                            this.setState(state => {
+                                state.succesfullyAuthenticated = succesful
+                                return state
+                            })
+                        }}/>) : ''}
+
+                        {pageIndex === 3 ? (<AddressStep address={address} onChange={(field, value) => {
+                            this.setState(state => {
+                                state.address[field] = value
+                                return state
+                            })
+                        }}/>) : ''}
+
+                        {pageIndex === 4 ? (<RequestAccepted />) : ''}
                     </div>
 
-                    <div className={"mt-4 text-center"}>
-                        <Button onClick={() => this.nextPage()}
+                    <div className={"mt-4 text-center"} style={{ display: (pageIndex === 4 ? 'none' : 'inherit') }}>
+                        <Button onClick={() => this.nextPage(continueIsDisabled)}
                                 color={continueIsDisabled ? "gray-400" : 'green-500'}
                                 disabled={continueIsDisabled}>Continue</Button>
                     </div>
