@@ -5,6 +5,7 @@ export default function Input(props) {
         <input type={props.type ? props.type : 'text'}
                className={"w-full p-3 placeholder-uppercase rounded border-solid border border-black"}
                placeholder={props.placeholder}
+               maxLength={props.maxlength}
                onChange={props.onChange} />
     );
 }
