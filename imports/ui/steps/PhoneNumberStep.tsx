@@ -4,7 +4,7 @@ import Input from '../components/Input'
 
 export default function PhoneNumberStep(props) {
     return (
-        <div className={"text-center mx-auto"} style={{ maxWidth: "70%"}}>
+        <div className={"text-center mx-auto step-wrapper"}>
             <StepTitle>Please enter your phone number</StepTitle>
 
             <div className={"flex"}>
