@@ -3,54 +3,61 @@ import {omit} from 'lodash/fp'
 import {check} from 'meteor/check'
 import {Meteor} from 'meteor/meteor'
 import {Requests} from '../imports/api/requests.ts'
+import {AuthenticatedTokens} from '../imports/api/authenticatedTokens.ts'
 import twilioCredentials from '../imports/credentials/twilio/credentials.json'
 import verificationService from '../imports/credentials/twilio/verification-service.json'
 
 const twilioClient = twilio(twilioCredentials.sid, twilioCredentials.auth_token)
 
-// TODO: Create a cache collection called AuthenticatedTokens for checking the token twice.
-function checkTwilioToken({phoneNumber, code}) {
-    //return new Promise(res => res({approved: true}))
+const checkTwilioToken = async ({phoneNumber, code}) => {
+    // return {approved: true}
 
-    return new Promise((resolve, reject) => {
-        twilioClient.verify.services(verificationService.sid)
-            .verificationChecks
-            .create({to: phoneNumber, code})
-            .then((verificationCheck) => {
-                console.log('in here or smth')
-                console.log(verificationCheck)
-                resolve({approved: verificationCheck.status === 'approved'})
-            })
-            .catch((...errs) => {
-                console.log(errs)
-                reject(JSON.stringify(errs))
-            })
+    const alreadyApproved = AuthenticatedTokens.findOne({
+        phoneNumber,
+        code,
+        isApproved: true,
     })
+
+    if (alreadyApproved && alreadyApproved.isApproved) {
+        return {approved: true}
+    }
+
+    const verificationCheck = await twilioClient.verify.services(verificationService.sid)
+        .verificationChecks
+        .create({to: phoneNumber, code})
+
+    const isApproved = verificationCheck.status === 'approved'
+
+    if (isApproved) {
+        AuthenticatedTokens.insert({
+            phoneNumber,
+            code,
+            isApproved,
+        })
+    }
+
+    return {approved: isApproved}
 }
 
 Meteor.methods({
-    sendVerificationToken(to) {
+    sendVerificationToken: async (to) => {
         check(to, String)
 
-        //return new Promise(res => res(true))
+        // return true
 
-        return new Promise((resolve, reject) => {
-            twilioClient.verify.services(verificationService.sid)
-                .verifications
-                .create({to, channel: 'sms'})
-                .then(() => resolve())
-                .catch(reject)
-        })
+        await twilioClient.verify.services(verificationService.sid)
+            .verifications
+            .create({to, channel: 'sms'})
     },
-    checkVerificationToken(data) {
+    checkVerificationToken: async (data) => {
         check(data, {
             phoneNumber: String,
             code: String,
         })
 
-        return checkTwilioToken(data)
+        return await checkTwilioToken(data)
     },
-    addViralRequest(data) {
+    addViralRequest: async (data) => {
         check(data, {
             symptoms: {
                 fever: Boolean,
@@ -69,25 +76,15 @@ Meteor.methods({
 
         const {phoneNumber, twoFactorCode} = data
 
-        // FIXME Checking a working token doesn't work twice for logical reason
-        return new Promise((resolve, reject) => {
-            checkTwilioToken({ phoneNumber, code: twoFactorCode })
-                .then((verificationCheck) => {
-                    console.log(verificationCheck)
-                    if (verificationCheck.approved) {
-                        console.log('checking phone number')
+        const result = await checkTwilioToken({phoneNumber, code: twoFactorCode})
 
-                        console.log(Requests.findOne({ phoneNumber }))
-                        if (!Requests.findOne({ phoneNumber })) {
-                            console.log('insert request')
-                            Requests.insert(omit(['twoFactorCode'])(data))
-                        }
+        if (result.approved) {
+            if (!Requests.findOne({phoneNumber})) {
+                Requests.insert(omit(['twoFactorCode'])(data))
+                AuthenticatedTokens.remove({ phoneNumber, code: twoFactorCode })
+            }
 
-                        console.log('resolve')
-                        resolve({ approved: verificationCheck.approved })
-                    }
-                })
-                .catch(reject)
-        })
+            return {approved: result.approved}
+        }
     }
 })
