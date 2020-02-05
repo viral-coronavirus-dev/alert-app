@@ -18,27 +18,38 @@ import Button from './components/Button'
      - Better alert on wrong code
      - Better form errors on invalid data
 */
-const isContinueButtonDisabled = [
-    // Symptoms
-    ({symptoms}) => (!Object.values(symptoms)
-        .map(s => s.value)
-        .some(s => s)),
-    // Phone Number
-    ({phoneNumber}) => !phoneNumber,
-    // Two Factor Auth
-    ({succesfullyAuthenticated}) => !succesfullyAuthenticated,
-    // Address Form
-    ({address: {fullName, address, city, country, emailAddress}}) => {
-        return !(([
-            fullName.length >= 3,
-            address.length >= 3,
-            city.length >= 3,
-            country.length > 0,
-            isEmail(emailAddress),
-        ]).every(s => s))
+
+const steps = [
+    {
+        key: 'symptoms',
+        isContinueDisabled: ({symptoms}) => (!Object.values(symptoms)
+            .map(s => s.value)
+            .some(s => s)),
     },
-    // Request Accepted
-    () => false,
+    {
+        key: 'phoneNumber',
+        isContinueDisabled: ({phoneNumber}) => !phoneNumber,
+    },
+    {
+        key: 'twoFactorAuth',
+        hideContinue: true,
+    },
+    {
+        key: 'addressForm',
+        isContinueDisabled: ({address: {fullName, address, city, country, emailAddress}}) => {
+            return !(([
+                fullName.length >= 3,
+                address.length >= 3,
+                city.length >= 3,
+                country.length > 0,
+                isEmail(emailAddress),
+            ]).every(s => s))
+        },
+    },
+    {
+        key: 'requestAccepted',
+        hideContinue: true,
+    }
 ]
 
 export default class AlertWorkflow extends React.Component {
@@ -72,10 +83,11 @@ export default class AlertWorkflow extends React.Component {
 
     render() {
         const {pageIndex, symptoms, phoneNumber, address, twoFactorCode} = this.state
+        const currentStep = steps[pageIndex]
+        const {key, isContinueDisabled, hideContinue} = currentStep
+        const continueIsDisabled = isContinueDisabled ? isContinueDisabled(this.state) : false
 
-        const continueIsDisabled = isContinueButtonDisabled[pageIndex](this.state)
-
-        if (pageIndex === 4) {
+        if (key === 'requestAccepted') {
             Meteor.call('addViralRequest', {
                 symptoms: mapValues(get('value'))(symptoms),
                 ...address,
@@ -96,23 +108,25 @@ export default class AlertWorkflow extends React.Component {
                     </div>
 
                     <div>
-                        {pageIndex === 0 ? (<SymptomsStep symptoms={symptoms} onClick={(symptomId) => {
+                        {key === 'symptoms' ? <SymptomsStep symptoms={symptoms} onClick={(symptomId) => {
                             this.setState(state => {
                                 state.symptoms[symptomId].value = !state.symptoms[symptomId].value
                                 return state
                             })
-                        }}/>) : ''}
+                        }}/> : ''}
 
-                        {pageIndex === 1 ? (<PhoneNumberStep onChange={(phoneNumber) => {
+                        {key === 'phoneNumber' ? <PhoneNumberStep onChange={(phoneNumber) => {
                             this.setState(state => {
                                 const [formattedNumber] = phone(phoneNumber)
+
+                                console.log(phoneNumber, formattedNumber)
 
                                 state.phoneNumber = formattedNumber
                                 return state
                             })
-                        }}/>) : ''}
+                        }}/> : ''}
 
-                        {pageIndex === 2 ? (<TwoFactorAuthStep phoneNumber={phoneNumber}
+                        {key === 'twoFactorAuth' ? <TwoFactorAuthStep phoneNumber={phoneNumber}
                                                                onAuthenticated={({approved, twoFactorCode}) => {
                                                                    this.setState(state => {
                                                                        state.succesfullyAuthenticated = approved
@@ -124,19 +138,19 @@ export default class AlertWorkflow extends React.Component {
                                                                    if (approved) {
                                                                        this.nextPage()
                                                                    }
-                                                               }}/>) : ''}
+                                                               }}/> : ''}
 
-                        {pageIndex === 3 ? (<AddressStep address={address} onChange={(field, value) => {
+                        {key === 'addressForm' ? <AddressStep address={address} onChange={(field, value) => {
                             this.setState(state => {
                                 state.address[field] = value
                                 return state
                             })
-                        }}/>) : ''}
+                        }}/> : ''}
 
-                        {pageIndex === 4 ? (<RequestAccepted/>) : ''}
+                        {key === 'requestAccepted' ? <RequestAccepted/> : ''}
                     </div>
 
-                    <div className={"mt-3 mb-3 lg:mb-0 text-center"} style={{display: ([2,4].includes(pageIndex) ? 'none' : 'inherit')}}>
+                    <div className={"mt-3 mb-3 lg:mb-0 text-center"} style={{display: (hideContinue ? 'none' : 'inherit')}}>
                         <Button onClick={() => this.nextPage(continueIsDisabled)}
                                 color={continueIsDisabled ? "gray-400" : 'green-500'}
                                 disabled={continueIsDisabled}>Continue</Button>
