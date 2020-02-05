@@ -10,7 +10,7 @@ import verificationService from '../imports/credentials/twilio/verification-serv
 const twilioClient = twilio(twilioCredentials.sid, twilioCredentials.auth_token)
 
 const checkTwilioToken = async ({phoneNumber, code}) => {
-    // return {approved: true}
+    //return {approved: true}
 
     const alreadyApproved = AuthenticatedTokens.findOne({
         phoneNumber,
