@@ -17,6 +17,7 @@ export default function PhoneNumberStep(props) {
         >
           <PhoneInput
             type={"text"}
+            defaultCountry={props.country}
             className={"w-full px-3 py-2 lg:p-3 text-sm lg:text-base placeholder-uppercase rounded border-solid border border-black"}
             placeholder={"Phone number"}
             onChange={phone => {
