@@ -11,7 +11,7 @@ export default class CountrySelect extends Component {
         this.state = {
             onChange: props.onChange,
             options: this.options,
-            value: null,
+            value: props.value,
         }
     }
 

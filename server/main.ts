@@ -9,8 +9,9 @@ import verificationService from '../imports/credentials/twilio/verification-serv
 
 const twilioClient = twilio(twilioCredentials.sid, twilioCredentials.auth_token)
 
+// TODO: npm run start-with-twilio
 const checkTwilioToken = async ({phoneNumber, code}) => {
-    //return {approved: true}
+    // return {approved: true}
 
     const alreadyApproved = AuthenticatedTokens.findOne({
         phoneNumber,
@@ -69,6 +70,7 @@ Meteor.methods({
             address: String,
             city: String,
             country: String,
+            countryCode: String,
             emailAddress: String,
             twoFactorCode: String,
             phoneNumber: String,

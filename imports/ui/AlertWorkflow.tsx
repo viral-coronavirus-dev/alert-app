@@ -2,8 +2,10 @@ import React from 'react'
 import { isValidPhoneNumber } from 'react-phone-number-input'
 import Steps from 'rc-steps'
 import isEmail from 'is-email'
+import getCountryISO2 from 'country-iso-3-to-2'
 import { Meteor } from 'meteor/meteor'
-import { get, mapValues } from 'lodash/fp'
+import { flow, get, getOr, mapValues, isEqual } from 'lodash/fp'
+import LocationStep from './steps/LocationStep'
 import SymptomsStep from './steps/SymptomsStep'
 import PhoneNumberStep from './steps/PhoneNumberStep'
 import TwoFactorAuthStep from './steps/TwoFactorAuthStep'
@@ -13,22 +15,26 @@ import Button from './components/Button'
 
 const steps = [
   {
-    key: "symptoms",
+    key: 'symptoms',
     isContinueDisabled: ({ symptoms }) =>
       !Object.values(symptoms)
         .map(s => s.value)
         .some(s => s)
   },
   {
-    key: "phoneNumber",
-    isContinueDisabled: ({ phoneNumber }) => !isValidPhoneNumber(phoneNumber) //!phoneNumber
+    key: 'location',
+    hideContinue: true,
   },
   {
-    key: "twoFactorAuth",
+    key: 'phoneNumber',
+    isContinueDisabled: ({ phoneNumber }) => !isValidPhoneNumber(phoneNumber)
+  },
+  {
+    key: 'twoFactorAuth',
     hideContinue: true
   },
   {
-    key: "addressForm",
+    key: 'addressForm',
     isContinueDisabled: ({
       address: { fullName, address, city, country, emailAddress }
     }) => {
@@ -42,7 +48,7 @@ const steps = [
     }
   },
   {
-    key: "requestAccepted",
+    key: 'requestAccepted',
     hideContinue: true
   }
 ]
@@ -50,25 +56,29 @@ const steps = [
 export default class AlertWorkflow extends React.Component {
   state = {
     pageIndex: 0,
+    location: {
+      country: '',
+    },
     symptoms: {
-      fever: { icon: "fever", title: "Fever", value: false },
-      cough: { icon: "cough", title: "Cough", value: false },
+      fever: { icon: 'fever', title: 'Fever', value: false },
+      cough: { icon: 'cough', title: 'Cough', value: false },
       shortness_of_breath: {
-        icon: "lung",
-        title: "Shortness of breath",
+        icon: 'lung',
+        title: 'Shortness of breath',
         value: false
       },
-      runny_nose: { icon: "nose", title: "Runny Nose", value: false }
+      runny_nose: { icon: 'nose', title: 'Runny Nose', value: false }
     },
-    phoneNumber: "",
+    phoneNumber: '',
     succesfullyAuthenticated: false,
-    twoFactorCode: "",
+    twoFactorCode: '',
     address: {
-      fullName: "",
-      address: "",
-      city: "",
-      country: "",
-      emailAddress: ""
+      fullName: '',
+      address: '',
+      city: '',
+      country: '',
+      countryCode: '',
+      emailAddress: ''
     }
   }
 
@@ -94,9 +104,9 @@ export default class AlertWorkflow extends React.Component {
       ? isContinueDisabled(this.state)
       : false
 
-    if (key === "requestAccepted") {
-      Meteor.call("addViralRequest", {
-        symptoms: mapValues(get("value"))(symptoms),
+    if (key === 'requestAccepted') {
+      Meteor.call('addViralRequest', {
+        symptoms: mapValues(get('value'))(symptoms),
         ...address,
         phoneNumber,
         twoFactorCode
@@ -135,16 +145,39 @@ export default class AlertWorkflow extends React.Component {
               ""
             )}
 
+            {key === "location" ? (
+              <LocationStep
+                location={location}
+                onLocation={location => {
+                  this.setState(state => {
+                    let countryCode = getCountryISO2(location.country)
+                    const countryData = location.additionalData.filter(flow(get('key'), isEqual('CountryName')))
+
+                    state.location.country = countryCode
+
+                    state.address.address = `${getOr('', 'street')(location)} ${getOr('', 'houseNumber')(location)}`.trim()
+                    state.address.city = getOr('', 'city')(location)
+                    state.address.country = getOr(location.country, '0.value')(countryData)
+                    state.address.countryCode = countryCode
+
+                    return state
+                  })
+                }}
+                nextPage={() => {
+                  this.nextPage()
+                }}
+              />
+            ) : (
+              ""
+            )}
+
             {key === "phoneNumber" ? (
               <PhoneNumberStep
-                onChange={phoneNumber => {
-                  this.setState(state => {
-                    // const [formattedNumber] = formatPhoneNumberIntl(
-                    // //   phoneNumber
-                    // )
-                    //console.log(phoneNumber, formattedNumber)
-                    state.phoneNumber = phoneNumber
-                    return state
+                  country={this.state.location.country}
+                  onChange={phoneNumber => {
+                    this.setState(state => {
+                      state.phoneNumber = phoneNumber
+                      return state
                   })
                 }}
               />
