@@ -1,8 +1,7 @@
-import React from "react";
-import StepTitle from "./StepTitle";
-//import Input from "../components/Input";
-import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
+import React from 'react'
+import StepTitle from './StepTitle'
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
 
 export default function PhoneNumberStep(props) {
   return (

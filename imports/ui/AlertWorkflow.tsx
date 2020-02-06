@@ -1,16 +1,15 @@
-import React from "react";
-//import phone from "phone";
-import { isValidPhoneNumber } from "react-phone-number-input";
-import Steps from "rc-steps";
-import isEmail from "is-email";
-import { Meteor } from "meteor/meteor";
-import { get, mapValues } from "lodash/fp";
-import SymptomsStep from "./steps/SymptomsStep";
-import PhoneNumberStep from "./steps/PhoneNumberStep";
-import TwoFactorAuthStep from "./steps/TwoFactorAuthStep";
-import AddressStep from "./steps/AddressStep";
-import RequestAccepted from "./steps/RequestAccepted";
-import Button from "./components/Button";
+import React from 'react'
+import { isValidPhoneNumber } from 'react-phone-number-input'
+import Steps from 'rc-steps'
+import isEmail from 'is-email'
+import { Meteor } from 'meteor/meteor'
+import { get, mapValues } from 'lodash/fp'
+import SymptomsStep from './steps/SymptomsStep'
+import PhoneNumberStep from './steps/PhoneNumberStep'
+import TwoFactorAuthStep from './steps/TwoFactorAuthStep'
+import AddressStep from './steps/AddressStep'
+import RequestAccepted from './steps/RequestAccepted'
+import Button from './components/Button'
 
 const steps = [
   {
@@ -39,14 +38,14 @@ const steps = [
         city.length >= 3,
         country.length > 0,
         isEmail(emailAddress)
-      ].every(s => s);
+      ].every(s => s)
     }
   },
   {
     key: "requestAccepted",
     hideContinue: true
   }
-];
+]
 
 export default class AlertWorkflow extends React.Component {
   state = {
@@ -71,13 +70,13 @@ export default class AlertWorkflow extends React.Component {
       country: "",
       emailAddress: ""
     }
-  };
+  }
 
   nextPage(isDisabled: boolean) {
     if (!isDisabled) {
       this.setState({
         pageIndex: this.state.pageIndex + 1
-      });
+      })
     }
   }
 
@@ -88,12 +87,12 @@ export default class AlertWorkflow extends React.Component {
       phoneNumber,
       address,
       twoFactorCode
-    } = this.state;
-    const currentStep = steps[pageIndex];
-    const { key, isContinueDisabled, hideContinue } = currentStep;
+    } = this.state
+    const currentStep = steps[pageIndex]
+    const { key, isContinueDisabled, hideContinue } = currentStep
     const continueIsDisabled = isContinueDisabled
       ? isContinueDisabled(this.state)
-      : false;
+      : false
 
     if (key === "requestAccepted") {
       Meteor.call("addViralRequest", {
@@ -101,7 +100,7 @@ export default class AlertWorkflow extends React.Component {
         ...address,
         phoneNumber,
         twoFactorCode
-      });
+      })
     }
 
     return (
@@ -127,9 +126,9 @@ export default class AlertWorkflow extends React.Component {
                 onClick={symptomId => {
                   this.setState(state => {
                     state.symptoms[symptomId].value = !state.symptoms[symptomId]
-                      .value;
-                    return state;
-                  });
+                      .value
+                    return state
+                  })
                 }}
               />
             ) : (
@@ -142,11 +141,11 @@ export default class AlertWorkflow extends React.Component {
                   this.setState(state => {
                     // const [formattedNumber] = formatPhoneNumberIntl(
                     // //   phoneNumber
-                    // );
-                    //console.log(phoneNumber, formattedNumber);
-                    state.phoneNumber = phoneNumber;
-                    return state;
-                  });
+                    // )
+                    //console.log(phoneNumber, formattedNumber)
+                    state.phoneNumber = phoneNumber
+                    return state
+                  })
                 }}
               />
             ) : (
@@ -158,14 +157,14 @@ export default class AlertWorkflow extends React.Component {
                 phoneNumber={phoneNumber}
                 onAuthenticated={({ approved, twoFactorCode }) => {
                   this.setState(state => {
-                    state.succesfullyAuthenticated = approved;
-                    state.twoFactorCode = twoFactorCode;
+                    state.succesfullyAuthenticated = approved
+                    state.twoFactorCode = twoFactorCode
 
-                    return state;
-                  });
+                    return state
+                  })
 
                   if (approved) {
-                    this.nextPage();
+                    this.nextPage()
                   }
                 }}
               />
@@ -178,9 +177,9 @@ export default class AlertWorkflow extends React.Component {
                 address={address}
                 onChange={(field, value) => {
                   this.setState(state => {
-                    state.address[field] = value;
-                    return state;
-                  });
+                    state.address[field] = value
+                    return state
+                  })
                 }}
               />
             ) : (
@@ -204,6 +203,6 @@ export default class AlertWorkflow extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
