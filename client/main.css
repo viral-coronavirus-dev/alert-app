@@ -8,7 +8,7 @@ body {
   font-family: 'Raleway', sans-serif;
 }
 
-.placeholder-uppercase::placeholder {
+.placeholder-uppercase::placeholder, .PhoneInputInput::placeholder {
   text-transform: uppercase;
 }
 
