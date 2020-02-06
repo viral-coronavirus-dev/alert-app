@@ -30,8 +30,8 @@ export const setupMap = mapRef => {
         map.getViewPort().resize()
     })
 
-    const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map))
-    const ui = H.ui.UI.createDefault(map, defaultLayers)
+    //const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map))
+    //const ui = H.ui.UI.createDefault(map, defaultLayers)
 
     return map
 }
