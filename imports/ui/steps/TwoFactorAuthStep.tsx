@@ -3,6 +3,7 @@ import React, {useState} from 'react'
 import StepTitle from './StepTitle'
 import Input from '../components/Input'
 import Button from '../components/Button'
+import { useAlert } from 'react-alert'
 
 let hasSentAlready = false
 
@@ -27,6 +28,8 @@ export default function TwoFactorAuthStep(props) {
 
     sendAuthenticationTokenOnce(phoneNumber)
 
+    const alert = useAlert()
+    
     return (
         <div className={"text-center mx-auto step-wrapper"}>
             <StepTitle>A 6-Digit Code has been sent to your phone</StepTitle>
@@ -40,11 +43,10 @@ export default function TwoFactorAuthStep(props) {
                     {!isAuthenticated && (<div className={"my-3"}>
                         <Button color={isValidCode ? "green-500" : "gray-400"}
                                 onClick={() => {
-                                    if (isValidCode) {
+                                    if (isValidCode) {                                       
                                         Meteor.call('checkVerificationToken', {phoneNumber, code}, (err, result) => {
-                                            if (err || !result.approved) {
-                                                console.error(err)
-                                                alert('Code was not approved!')
+                                            if (err || !result.approved) { 
+                                                alert.error('Invalid Auth Code!')
                                                 return null
                                             }
 
