@@ -1,4 +1,4 @@
-const credentials = require('../../imports/credentials/twilio/credentials')
+const credentials = require('../../imports/credentials/twilio/credentials.js')
 const accountSid = credentials.sid
 const authToken = credentials.auth_token
 

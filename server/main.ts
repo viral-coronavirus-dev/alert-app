@@ -12,9 +12,16 @@ const twilioClient = twilio(
   twilioCredentials.auth_token
 );
 
+const runTwilio = process.env['TWILIO_ENABLED'];
+
+
 // TODO: npm run start-with-twilio
 const checkTwilioToken = async ({ phoneNumber, code }) => {
-  return { approved: true }; //comment this on live
+  
+  // if the env variable TWILIO_ENABLED is false this will run
+  if(!runTwilio) {
+    return { approved: true }; 
+  }
 
   const alreadyApproved = AuthenticatedTokens.findOne({
     phoneNumber,
@@ -33,12 +40,15 @@ const checkTwilioToken = async ({ phoneNumber, code }) => {
   const isApproved = verificationCheck.status === "approved";
 
   if (isApproved) {
+
     AuthenticatedTokens.insert({
       phoneNumber,
       code,
       isApproved
     });
   }
+
+ 
 
   return { approved: isApproved };
 };
@@ -47,7 +57,10 @@ Meteor.methods({
   sendVerificationToken: async to => {
     check(to, String);
 
-    return true; //comment this on live
+    if(!runTwilio) {
+      return true; 
+    }
+
 
     await twilioClient.verify
       .services(verificationService.sid)
