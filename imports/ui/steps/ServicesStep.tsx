@@ -4,10 +4,10 @@ import StepTitle from "./StepTitle";
 export default function SymptomsStep(props) {
   return (
     <div className={"text-center mx-auto"} style={{ maxWidth: "70%" }}>
-      <StepTitle>Which symptoms do you have?</StepTitle>
+      <StepTitle>What service do you need?</StepTitle>
 
       <div className={"flex flex-wrap"}>
-        {Object.entries(props.symptoms).map(([key, value]) => (
+        {Object.entries(props.services).map(([key, value]) => (
           <div key={key} className={"w-1/2 mb-1 lg:w-1/5 lg:mb-0"}>
             <div
               className={"block cursor-pointer"}

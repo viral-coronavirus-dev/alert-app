@@ -1,14 +1,15 @@
 @import "tailwindcss/tailwind";
 @import "tailwindcss/components";
-@import url('https://fonts.googleapis.com/css?family=Raleway:300,500&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Raleway:300,500&display=swap");
 
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Raleway', sans-serif;
+  font-family: "Raleway", sans-serif;
 }
 
-.placeholder-uppercase::placeholder, .PhoneInputInput::placeholder {
+.placeholder-uppercase::placeholder,
+.PhoneInputInput::placeholder {
   text-transform: uppercase;
 }
 
@@ -17,16 +18,23 @@ body {
 }
 
 .bg-white-to-transparent {
-  background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 .hover-icon-wrapper .icon-active {
   opacity: 0;
 }
-
 .active-icon-wrapper .icon-active {
   opacity: 1;
 }
+/* .hover-icon-wrapper:hover {
+  background-color: #48bb78;
+} */
 
 /* Symptoms */
 .symptom-icon {
@@ -45,7 +53,7 @@ body {
   max-width: 70%;
 }
 
-@media(max-width: 1400px) {
+@media (max-width: 1400px) {
   /* Reduce size to half */
   .symptom-icon {
     width: 75px;
@@ -64,8 +72,31 @@ body {
   }
 }
 
-@media(max-width: 680px) {
+@media (max-width: 680px) {
   .step-wrapper {
     max-width: 80%;
+  }
+}
+
+.rounded {
+  border-radius: 25px;
+}
+input.rounded,
+.PhoneInput {
+  border-color: grey;
+}
+*:focus {
+  outline: none;
+}
+.css-yk16xz-control {
+  border-radius: 25px !important;
+  border-color: grey !important;
+}
+.css-yk16xz-control:focus {
+  outline: none;
+}
+@media only screen and (max-device-width: 480px) {
+  a {
+    min-width: 75px;
   }
 }

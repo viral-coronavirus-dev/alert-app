@@ -1,14 +1,14 @@
 import React from "react";
 import StepTitle from "./StepTitle";
 
-export default function SymptomsStep(props) {
+export default function ServicesStep(props) {
   return (
     <div className={"text-center mx-auto"} style={{ maxWidth: "70%" }}>
-      <StepTitle>Which symptoms do you have?</StepTitle>
+      <StepTitle>How can we help you?</StepTitle>
 
       <div className={"flex flex-wrap"}>
-        {Object.entries(props.symptoms).map(([key, value]) => (
-          <div key={key} className={"w-1/2 mb-1 lg:w-1/5 lg:mb-0"}>
+        {Object.entries(props.home).map(([key, value]) => (
+          <div key={key} className={"w-1/2 mb-1 lg:w-1/2 lg:mb-0"}>
             <div
               className={"block cursor-pointer"}
               onClick={() => props.onClick(key, value)}
@@ -34,7 +34,7 @@ export default function SymptomsStep(props) {
                   />
                 </div>
               </div>
-              <div className={"font-light lg:text-lg text-sm"}>
+              <div className={"font-light lg:text-lg text-sm uppercase"}>
                 {value.title}
               </div>
             </div>
