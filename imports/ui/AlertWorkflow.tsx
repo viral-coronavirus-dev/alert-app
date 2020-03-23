@@ -1,40 +1,40 @@
-import React from 'react'
-import { isValidPhoneNumber } from 'react-phone-number-input'
-import Steps from 'rc-steps'
-import isEmail from 'is-email'
-import getCountryISO2 from 'country-iso-3-to-2'
-import { Meteor } from 'meteor/meteor'
-import { flow, get, getOr, mapValues, isEqual } from 'lodash/fp'
-import LocationStep from './steps/LocationStep'
-import SymptomsStep from './steps/SymptomsStep'
-import PhoneNumberStep from './steps/PhoneNumberStep'
-import TwoFactorAuthStep from './steps/TwoFactorAuthStep'
-import AddressStep from './steps/AddressStep'
-import RequestAccepted from './steps/RequestAccepted'
-import Button from './components/Button'
+import React from "react";
+import { isValidPhoneNumber } from "react-phone-number-input";
+import Steps from "rc-steps";
+import isEmail from "is-email";
+import getCountryISO2 from "country-iso-3-to-2";
+import { Meteor } from "meteor/meteor";
+import { flow, get, getOr, mapValues, isEqual } from "lodash/fp";
+import LocationStep from "./steps/LocationStep";
+import SymptomsStep from "./steps/SymptomsStep";
+import PhoneNumberStep from "./steps/PhoneNumberStep";
+import TwoFactorAuthStep from "./steps/TwoFactorAuthStep";
+import AddressStep from "./steps/AddressStep";
+import RequestAccepted from "./steps/RequestAccepted";
+import Button from "./components/Button";
 
 const steps = [
   {
-    key: 'symptoms',
+    key: "symptoms",
     isContinueDisabled: ({ symptoms }) =>
       !Object.values(symptoms)
         .map(s => s.value)
         .some(s => s)
   },
   {
-    key: 'location',
-    hideContinue: true,
-  },
-  {
-    key: 'phoneNumber',
-    isContinueDisabled: ({ phoneNumber }) => !isValidPhoneNumber(phoneNumber)
-  },
-  {
-    key: 'twoFactorAuth',
+    key: "location",
     hideContinue: true
   },
   {
-    key: 'addressForm',
+    key: "phoneNumber",
+    isContinueDisabled: ({ phoneNumber }) => !isValidPhoneNumber(phoneNumber)
+  },
+  {
+    key: "twoFactorAuth",
+    hideContinue: true
+  },
+  {
+    key: "addressForm",
     isContinueDisabled: ({
       address: { fullName, address, city, country, emailAddress }
     }) => {
@@ -44,49 +44,49 @@ const steps = [
         city.length >= 3,
         country.length > 0,
         isEmail(emailAddress)
-      ].every(s => s)
+      ].every(s => s);
     }
   },
   {
-    key: 'requestAccepted',
+    key: "requestAccepted",
     hideContinue: true
   }
-]
+];
 
 export default class AlertWorkflow extends React.Component {
   state = {
     pageIndex: 0,
     location: {
-      country: '',
+      country: ""
     },
     symptoms: {
-      fever: { icon: 'fever', title: 'Fever', value: false },
-      cough: { icon: 'cough', title: 'Cough', value: false },
+      fever: { icon: "fever", title: "Fever", value: false },
+      cough: { icon: "cough", title: "Cough", value: false },
       shortness_of_breath: {
-        icon: 'lung',
-        title: 'Shortness of breath',
+        icon: "lung",
+        title: "Shortness of breath",
         value: false
       },
-      runny_nose: { icon: 'nose', title: 'Runny Nose', value: false }
+      runny_nose: { icon: "nose", title: "Runny Nose", value: false }
     },
-    phoneNumber: '',
+    phoneNumber: "",
     succesfullyAuthenticated: false,
-    twoFactorCode: '',
+    twoFactorCode: "",
     address: {
-      fullName: '',
-      address: '',
-      city: '',
-      country: '',
-      countryCode: '',
-      emailAddress: ''
+      fullName: "",
+      address: "",
+      city: "",
+      country: "",
+      countryCode: "",
+      emailAddress: ""
     }
-  }
+  };
 
   nextPage(isDisabled: boolean) {
     if (!isDisabled) {
       this.setState({
         pageIndex: this.state.pageIndex + 1
-      })
+      });
     }
   }
 
@@ -97,20 +97,20 @@ export default class AlertWorkflow extends React.Component {
       phoneNumber,
       address,
       twoFactorCode
-    } = this.state
-    const currentStep = steps[pageIndex]
-    const { key, isContinueDisabled, hideContinue } = currentStep
+    } = this.state;
+    const currentStep = steps[pageIndex];
+    const { key, isContinueDisabled, hideContinue } = currentStep;
     const continueIsDisabled = isContinueDisabled
       ? isContinueDisabled(this.state)
-      : false
+      : false;
 
-    if (key === 'requestAccepted') {
-      Meteor.call('addViralRequest', {
-        symptoms: mapValues(get('value'))(symptoms),
+    if (key === "requestAccepted") {
+      Meteor.call("addViralRequest", {
+        symptoms: mapValues(get("value"))(symptoms),
         ...address,
         phoneNumber,
         twoFactorCode
-      })
+      });
     }
 
     return (
@@ -136,9 +136,9 @@ export default class AlertWorkflow extends React.Component {
                 onClick={symptomId => {
                   this.setState(state => {
                     state.symptoms[symptomId].value = !state.symptoms[symptomId]
-                      .value
-                    return state
-                  })
+                      .value;
+                    return state;
+                  });
                 }}
               />
             ) : (
@@ -147,24 +147,27 @@ export default class AlertWorkflow extends React.Component {
 
             {key === "location" ? (
               <LocationStep
-                location={location}
-                onLocation={location => {
+                location={
+                  window.currentLocation ? window.currentLocation : null
+                }
+                onLocation={loc => {
                   this.setState(state => {
-                    let countryCode = getCountryISO2(location.country)
-                    const countryData = location.additionalData.filter(flow(get('key'), isEqual('CountryName')))
+                   
+                    let countryCode = getCountryISO2(loc.country);
+                    const countryData = loc.additionalData.filter(flow(get('key'), isEqual('CountryName')))
 
                     state.location.country = countryCode
 
-                    state.address.address = `${getOr('', 'street')(location)} ${getOr('', 'houseNumber')(location)}`.trim()
-                    state.address.city = getOr('', 'city')(location)
-                    state.address.country = getOr(location.country, '0.value')(countryData)
+                    state.address.address = `${getOr('', 'street')(loc)} ${getOr('', 'houseNumber')(loc)}`.trim()
+                    state.address.city = getOr('', 'city')(loc)
+                    state.address.country = getOr(loc.country, '0.value')(countryData)
                     state.address.countryCode = countryCode
 
-                    return state
-                  })
+                    return state;
+                  });
                 }}
                 nextPage={() => {
-                  this.nextPage()
+                  this.nextPage();
                 }}
               />
             ) : (
@@ -173,12 +176,12 @@ export default class AlertWorkflow extends React.Component {
 
             {key === "phoneNumber" ? (
               <PhoneNumberStep
-                  country={this.state.location.country}
-                  onChange={phoneNumber => {
-                    this.setState(state => {
-                      state.phoneNumber = phoneNumber
-                      return state
-                  })
+                country={this.state.location.country}
+                onChange={phoneNumber => {
+                  this.setState(state => {
+                    state.phoneNumber = phoneNumber;
+                    return state;
+                  });
                 }}
               />
             ) : (
@@ -190,14 +193,14 @@ export default class AlertWorkflow extends React.Component {
                 phoneNumber={phoneNumber}
                 onAuthenticated={({ approved, twoFactorCode }) => {
                   this.setState(state => {
-                    state.succesfullyAuthenticated = approved
-                    state.twoFactorCode = twoFactorCode
+                    state.succesfullyAuthenticated = approved;
+                    state.twoFactorCode = twoFactorCode;
 
-                    return state
-                  })
+                    return state;
+                  });
 
                   if (approved) {
-                    this.nextPage()
+                    this.nextPage();
                   }
                 }}
               />
@@ -210,9 +213,9 @@ export default class AlertWorkflow extends React.Component {
                 address={address}
                 onChange={(field, value) => {
                   this.setState(state => {
-                    state.address[field] = value
-                    return state
-                  })
+                    state.address[field] = value;
+                    return state;
+                  });
                 }}
               />
             ) : (
@@ -236,6 +239,6 @@ export default class AlertWorkflow extends React.Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }

@@ -9,6 +9,7 @@ export default class Map extends React.Component {
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(position => {
+      window.currentLocation = position;
       setupMap(this.mapRef.current, position);
     });
   }
