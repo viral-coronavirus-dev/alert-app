@@ -120,16 +120,19 @@ export default class AlertWorkflow extends React.Component {
   };
 
   nextPage(isDisabled: boolean) {
+    //TO DO    
     if (!isDisabled) {
-      this.setState({
-        pageIndex: this.state.pageIndex + 1
-      });
+      if (this.state.pageIndex === 1) {
+        this.setState({
+          pageIndex: this.state.pageIndex + 2
+        });
+      } else {
+        this.setState({
+          pageIndex: this.state.pageIndex + 1
+        });
+      }
+
     }
-  }
-  locationPage() {
-    this.setState({
-      pageIndex: this.state.pageIndex + 2
-    });
   }
   servicesPage() {
     this.setState({
@@ -196,8 +199,8 @@ export default class AlertWorkflow extends React.Component {
                 }}
               />
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             {key === "symptoms" ? (
               <SymptomsStep
@@ -208,12 +211,11 @@ export default class AlertWorkflow extends React.Component {
                       .value;
                     return state;
                   });
-                  this.locationPage();
                 }}
               />
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             {key === "services" ? (
               <ServicesStep
@@ -224,12 +226,11 @@ export default class AlertWorkflow extends React.Component {
                       .value;
                     return state;
                   });
-
                 }}
               />
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             {key === "location" ? (
               <LocationStep
@@ -238,15 +239,22 @@ export default class AlertWorkflow extends React.Component {
                 }
                 onLocation={loc => {
                   this.setState(state => {
-                   
                     let countryCode = getCountryISO2(loc.country);
-                    const countryData = loc.additionalData.filter(flow(get('key'), isEqual('CountryName')))
+                    const countryData = loc.additionalData.filter(
+                      flow(get("key"), isEqual("CountryName"))
+                    );
 
                     state.location.country = countryCode;
-                    state.address.address = `${getOr('', 'street')(loc)} ${getOr('', 'houseNumber')(loc)}`.trim()
-                    state.address.city = getOr('', 'city')(loc)
-                    state.address.country = getOr(loc.country, '0.value')(countryData)
-                    state.address.countryCode = countryCode
+                    state.address.address = `${getOr(
+                      "",
+                      "street"
+                    )(loc)} ${getOr("", "houseNumber")(loc)}`.trim();
+                    state.address.city = getOr("", "city")(loc);
+                    state.address.country = getOr(
+                      loc.country,
+                      "0.value"
+                    )(countryData);
+                    state.address.countryCode = countryCode;
                     return state;
                   });
                 }}
@@ -255,8 +263,8 @@ export default class AlertWorkflow extends React.Component {
                 }}
               />
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             {key === "phoneNumber" ? (
               <PhoneNumberStep
@@ -269,8 +277,8 @@ export default class AlertWorkflow extends React.Component {
                 }}
               />
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             {key === "twoFactorAuth" ? (
               <TwoFactorAuthStep
@@ -279,18 +287,16 @@ export default class AlertWorkflow extends React.Component {
                   this.setState(state => {
                     state.succesfullyAuthenticated = approved;
                     state.twoFactorCode = twoFactorCode;
-
                     return state;
                   });
-
                   if (approved) {
                     this.nextPage();
                   }
                 }}
               />
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             {key === "addressForm" ? (
               <AddressStep
@@ -303,8 +309,8 @@ export default class AlertWorkflow extends React.Component {
                 }}
               />
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             {key === "requestAccepted" ? <RequestAccepted /> : ""}
           </div>

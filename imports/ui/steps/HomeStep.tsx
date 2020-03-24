@@ -16,10 +16,10 @@ export default function ServicesStep(props) {
               <div
                 className={`
                                         ${
-                                          value.value
-                                            ? "bg-green-500 text-white active-icon-wrapper"
-                                            : "bg-white text-green-500"
-                                        } 
+                  value.value
+                    ? "bg-green-500 text-white active-icon-wrapper"
+                    : "bg-white text-green-500"
+                  } 
                                          rounded-full mx-auto hover-icon-wrapper symptom-icon
                                     `}
               >

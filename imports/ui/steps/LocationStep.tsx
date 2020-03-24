@@ -91,24 +91,24 @@ export default class LocationStep extends React.PureComponent {
           {!this.state.hereLocation === null ? (
             <p>Loading...</p>
           ) : (
-            <Input
-              value={
-                this.state.hereLocation === null ? "" : this.state.hereLocation
-              }
-              type={"text"}
-              placeholder={"Search for location"}
-              onChange={e => {
-                e.persist();
-                this.setState(state => {
-                  return {
-                    ...state,
-                    hereLocation: e.target.value.toString(),
-                    inputDisturbed: true
-                  };
-                });
-              }}
-            />
-          )}
+              <Input
+                value={
+                  this.state.hereLocation === null ? "" : this.state.hereLocation
+                }
+                type={"text"}
+                placeholder={"Search for location"}
+                onChange={e => {
+                  e.persist();
+                  this.setState(state => {
+                    return {
+                      ...state,
+                      hereLocation: e.target.value.toString(),
+                      inputDisturbed: true
+                    };
+                  });
+                }}
+              />
+            )}
 
           <div className={"mt-3 flex mx-auto"} style={{ maxWidth: "180px" }}>
             <div className={"w-1/2"}>
@@ -127,11 +127,11 @@ export default class LocationStep extends React.PureComponent {
                         //   lng
                         // });
 
-              
+
                         this.props.onLocation(getAddress(res));
-                        
+
                         this.setState(state => {
-                          return { ...state, inputDisturbed: false,  hereLocation : getAddress(res).label};
+                          return { ...state, inputDisturbed: false, hereLocation: getAddress(res).label };
                         });
                         // FIXME ask browser for current location and automatically center map as done in LocationStep (reuse code in here)
                         // map = new H.Map(map, defaultLayers.vector.normal.map, {
