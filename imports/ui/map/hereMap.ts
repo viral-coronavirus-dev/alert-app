@@ -17,7 +17,7 @@ export const setupMap = (mapRef, position) => {
 
   const defaultLayers = platform.createDefaultLayers();
 
-  var locationMarker = new H.map.Marker({
+ window.locationMarker = new H.map.Marker({
     lat: position.coords.latitude,
     lng: position.coords.longitude
   });
@@ -29,7 +29,7 @@ export const setupMap = (mapRef, position) => {
     center: { lat: position.coords.latitude, lng: position.coords.longitude }
   });
 
-  map.addObject(locationMarker);
+  map.addObject(window.locationMarker);
 
   window.addEventListener("resize", () => map.getViewPort().resize());
 
@@ -44,5 +44,18 @@ export const search = (query: string) => {
 
   return new Promise((resolve, reject) => {
     geocoder.geocode({ searchText: query, jsonattributes: 1 }, resolve, reject);
+  });
+};
+
+export const revSearch = (query: Object) => {
+  const geocoder = platform.getGeocodingService();
+
+  return new Promise((resolve, reject) => {
+    geocoder.reverseGeocode({
+      jsonattributes: 1,
+      prox: `${query.lat},${query.lng}`,
+      mode: 'retrieveAddresses',
+      maxresults: 1
+    }, resolve, reject);
   });
 };

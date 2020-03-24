@@ -224,6 +224,7 @@ export default class AlertWorkflow extends React.Component {
                       .value;
                     return state;
                   });
+
                 }}
               />
             ) : (
@@ -232,27 +233,20 @@ export default class AlertWorkflow extends React.Component {
 
             {key === "location" ? (
               <LocationStep
-                location={location}
-                onLocation={location => {
+                location={
+                  window.currentLocation ? window.currentLocation : null
+                }
+                onLocation={loc => {
                   this.setState(state => {
-                    let countryCode = getCountryISO2(location.country);
-                    const countryData = location.additionalData.filter(
-                      flow(get("key"), isEqual("CountryName"))
-                    );
+                   
+                    let countryCode = getCountryISO2(loc.country);
+                    const countryData = loc.additionalData.filter(flow(get('key'), isEqual('CountryName')))
 
                     state.location.country = countryCode;
-
-                    state.address.address = `${getOr(
-                      "",
-                      "street"
-                    )(location)} ${getOr("", "houseNumber")(location)}`.trim();
-                    state.address.city = getOr("", "city")(location);
-                    state.address.country = getOr(
-                      location.country,
-                      "0.value"
-                    )(countryData);
-                    state.address.countryCode = countryCode;
-
+                    state.address.address = `${getOr('', 'street')(loc)} ${getOr('', 'houseNumber')(loc)}`.trim()
+                    state.address.city = getOr('', 'city')(loc)
+                    state.address.country = getOr(loc.country, '0.value')(countryData)
+                    state.address.countryCode = countryCode
                     return state;
                   });
                 }}
