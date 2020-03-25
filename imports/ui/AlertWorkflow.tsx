@@ -53,6 +53,7 @@ const steps = [
   }
 ];
 
+
 export default class AlertWorkflow extends React.Component {
   state = {
     pageIndex: 0,
@@ -142,7 +143,7 @@ export default class AlertWorkflow extends React.Component {
                 }}
               />
             ) : (
-              ""
+              null
             )}
 
             {key === "location" ? (
@@ -152,16 +153,23 @@ export default class AlertWorkflow extends React.Component {
                 }
                 onLocation={loc => {
                   this.setState(state => {
-                   
                     let countryCode = getCountryISO2(loc.country);
-                    const countryData = loc.additionalData.filter(flow(get('key'), isEqual('CountryName')))
+                    const countryData = loc.additionalData.filter(
+                      flow(get("key"), isEqual("CountryName"))
+                    );
 
-                    state.location.country = countryCode
+                    state.location.country = countryCode;
 
-                    state.address.address = `${getOr('', 'street')(loc)} ${getOr('', 'houseNumber')(loc)}`.trim()
-                    state.address.city = getOr('', 'city')(loc)
-                    state.address.country = getOr(loc.country, '0.value')(countryData)
-                    state.address.countryCode = countryCode
+                    state.address.address = `${getOr(
+                      "",
+                      "street"
+                    )(loc)} ${getOr("", "houseNumber")(loc)}`.trim();
+                    state.address.city = getOr("", "city")(loc);
+                    state.address.country = getOr(
+                      loc.country,
+                      "0.value"
+                    )(countryData);
+                    state.address.countryCode = countryCode;
 
                     return state;
                   });
@@ -171,7 +179,7 @@ export default class AlertWorkflow extends React.Component {
                 }}
               />
             ) : (
-              ""
+              null
             )}
 
             {key === "phoneNumber" ? (
