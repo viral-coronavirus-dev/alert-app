@@ -22,6 +22,7 @@ export default class LocationStep extends React.PureComponent {
   componentDidMount() {
     this.fetchLocation(this.props.location).then(loc => {
       this.setState(state => {
+        console.log("loc", loc)
         return {
           ...state,
           hereLocation: getAddress(loc).label,
@@ -88,8 +89,8 @@ export default class LocationStep extends React.PureComponent {
         <StepTitle>Where are you located?</StepTitle>
 
         <div className={""}>
-          {!this.state.hereLocation === null ? (
-            <p>Loading...</p>
+          {this.state.hereLocation === null ? (
+            <p style={{ textAlign: 'left' }}>Loading...</p>
           ) : (
               <Input
                 value={
@@ -127,11 +128,14 @@ export default class LocationStep extends React.PureComponent {
                         //   lng
                         // });
 
-
                         this.props.onLocation(getAddress(res));
 
                         this.setState(state => {
-                          return { ...state, inputDisturbed: false, hereLocation: getAddress(res).label };
+                          return {
+                            ...state,
+                            inputDisturbed: false,
+                            hereLocation: getAddress(res).label
+                          };
                         });
                         // FIXME ask browser for current location and automatically center map as done in LocationStep (reuse code in here)
                         // map = new H.Map(map, defaultLayers.vector.normal.map, {
@@ -143,7 +147,7 @@ export default class LocationStep extends React.PureComponent {
                         window.locationMarker.setGeometry({
                           lat,
                           lng
-                        })
+                        });
                         //  setHasFoundLocation(getAddress(res).Label)
                       } else {
                         alert("Could not find the location!");

@@ -66,6 +66,7 @@ const steps = [
   }
 ];
 
+
 export default class AlertWorkflow extends React.Component {
   state = {
     pageIndex: 0,
@@ -214,9 +215,8 @@ export default class AlertWorkflow extends React.Component {
                 }}
               />
             ) : (
-                ""
+                null
               )}
-
             {key === "services" ? (
               <ServicesStep
                 services={services}
@@ -229,9 +229,8 @@ export default class AlertWorkflow extends React.Component {
                 }}
               />
             ) : (
-                ""
+                null
               )}
-
             {key === "location" ? (
               <LocationStep
                 location={
@@ -245,6 +244,7 @@ export default class AlertWorkflow extends React.Component {
                     );
 
                     state.location.country = countryCode;
+
                     state.address.address = `${getOr(
                       "",
                       "street"
@@ -263,7 +263,7 @@ export default class AlertWorkflow extends React.Component {
                 }}
               />
             ) : (
-                ""
+                null
               )}
 
             {key === "phoneNumber" ? (

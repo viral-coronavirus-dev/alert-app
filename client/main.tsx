@@ -19,6 +19,6 @@ Meteor.startup(() => {
     </AlertProvider>
   );
 
-  render(<App />, document.getElementById("react-target"));
+  // render(<App />, document.getElementById("react-target"));
   render(<Root />, document.getElementById("root"));
 });
