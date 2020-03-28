@@ -21,7 +21,7 @@ export default class LocationStep extends React.PureComponent {
   componentDidMount() {
     this.fetchLocation(this.props.location).then(loc => {
       this.setState(state => {
-        console.log("loc", loc)
+       
         return {
           ...state,
           hereLocation: getAddress(loc).label,
@@ -30,7 +30,13 @@ export default class LocationStep extends React.PureComponent {
       });
 
       this.props.onLocation(getAddress(loc));
-    });
+    }).catch(error => {
+      return {
+        ...state,
+        hereLocation: "",
+        inputDisturbed: false
+      };
+    })
   }
   // componentDidUpdate(prevProps, prevState) {
 
