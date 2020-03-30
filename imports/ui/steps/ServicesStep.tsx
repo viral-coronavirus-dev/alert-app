@@ -4,10 +4,10 @@ import StepTitle from "./StepTitle";
 export default function SymptomsStep(props) {
   return (
     <div className={"text-center mx-auto"} style={{ maxWidth: "70%" }}>
-      <StepTitle>Which symptoms do you have?</StepTitle>
+      <StepTitle>What service do you need?</StepTitle>
 
       <div className={"flex flex-wrap"}>
-        {Object.entries(props.symptoms).map(([key, value]) => (
+        {Object.entries(props.services).map(([key, value]) => (
           <div key={key} className={"w-1/2 mb-1 lg:w-1/5 lg:mb-0"}>
             <div
               className={"block cursor-pointer"}
@@ -16,10 +16,10 @@ export default function SymptomsStep(props) {
               <div
                 className={`
                                         ${
-                  value.value
-                    ? "bg-green-500 text-white active-icon-wrapper"
-                    : "bg-white text-green-500"
-                  } 
+                                          value.value
+                                            ? "bg-green-500 text-white active-icon-wrapper"
+                                            : "bg-white text-green-500"
+                                        } 
                                          rounded-full mx-auto hover-icon-wrapper symptom-icon
                                     `}
               >

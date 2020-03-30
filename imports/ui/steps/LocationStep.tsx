@@ -6,6 +6,7 @@ import Button from "../components/Button";
 import { search, getMap, revSearch } from "/imports/ui/map/hereMap";
 const { H } = window;
 
+
 const getLatLong = getOr(
   {},
   "response.view.0.result.0.location.displayPosition"
@@ -95,26 +96,26 @@ export default class LocationStep extends React.PureComponent {
 
         <div className={""}>
           {this.state.hereLocation === null ? (
-            <p style={{textAlign: 'left'}}>Loading...</p>
+            <p style={{ textAlign: 'left' }}>Loading...</p>
           ) : (
-            <Input
-              value={
-                this.state.hereLocation === null ? "" : this.state.hereLocation
-              }
-              type={"text"}
-              placeholder={"Search for location"}
-              onChange={e => {
-                e.persist();
-                this.setState(state => {
-                  return {
-                    ...state,
-                    hereLocation: e.target.value.toString(),
-                    inputDisturbed: true
-                  };
-                });
-              }}
-            />
-          )}
+              <Input
+                value={
+                  this.state.hereLocation === null ? "" : this.state.hereLocation
+                }
+                type={"text"}
+                placeholder={"Search for location"}
+                onChange={e => {
+                  e.persist();
+                  this.setState(state => {
+                    return {
+                      ...state,
+                      hereLocation: e.target.value.toString(),
+                      inputDisturbed: true
+                    };
+                  });
+                }}
+              />
+            )}
 
           <div className={"mt-3 flex mx-auto"} style={{ maxWidth: "180px" }}>
             <div className={"w-1/2"}>

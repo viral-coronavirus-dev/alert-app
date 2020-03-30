@@ -6,7 +6,9 @@ import getCountryISO2 from "country-iso-3-to-2";
 import { Meteor } from "meteor/meteor";
 import { flow, get, getOr, mapValues, isEqual } from "lodash/fp";
 import LocationStep from "./steps/LocationStep";
+import HomeStep from "./steps/HomeStep";
 import SymptomsStep from "./steps/SymptomsStep";
+import ServicesStep from "./steps/ServicesStep";
 import PhoneNumberStep from "./steps/PhoneNumberStep";
 import TwoFactorAuthStep from "./steps/TwoFactorAuthStep";
 import AddressStep from "./steps/AddressStep";
@@ -15,9 +17,20 @@ import Button from "./components/Button";
 
 const steps = [
   {
+    key: "home",
+    hideContinue: true
+  },
+  {
     key: "symptoms",
     isContinueDisabled: ({ symptoms }) =>
       !Object.values(symptoms)
+        .map(s => s.value)
+        .some(s => s)
+  },
+  {
+    key: "services",
+    isContinueDisabled: ({ services }) =>
+      !Object.values(services)
         .map(s => s.value)
         .some(s => s)
   },
@@ -60,15 +73,39 @@ export default class AlertWorkflow extends React.Component {
     location: {
       country: ""
     },
+    home: {
+      report: { icon: "cough", title: "Report Symptoms", value: false },
+      request: { icon: "team", title: "Request Services", value: false }
+    },
     symptoms: {
       fever: { icon: "fever", title: "Fever", value: false },
       cough: { icon: "cough", title: "Cough", value: false },
       shortness_of_breath: {
         icon: "lung",
-        title: "Shortness of breath",
+        title: "Shortness of Breath",
         value: false
       },
-      runny_nose: { icon: "nose", title: "Runny Nose", value: false }
+      runny_nose: { icon: "nose", title: "Runny Nose", value: false },
+      sore_throat: { icon: "sore_throat", title: "Sore Throat", value: false }
+    },
+    services: {
+      buying_groceries: {
+        icon: "supermarket",
+        title: "Buying Groceries",
+        value: false
+      },
+      need_medicines: {
+        icon: "drug",
+        title: "Need Medicines",
+        value: false
+      },
+      talk_to_someone: {
+        icon: "phone",
+        title: "Talk to Someone",
+        value: false
+      },
+      child_care: { icon: "care", title: "Child Care", value: false },
+      drive: { icon: "drive", title: "Drive", value: false }
     },
     phoneNumber: "",
     succesfullyAuthenticated: false,
@@ -84,17 +121,31 @@ export default class AlertWorkflow extends React.Component {
   };
 
   nextPage(isDisabled: boolean) {
+    //TO DO    
     if (!isDisabled) {
-      this.setState({
-        pageIndex: this.state.pageIndex + 1
-      });
+      if (this.state.pageIndex === 1) {
+        this.setState({
+          pageIndex: this.state.pageIndex + 2
+        });
+      } else {
+        this.setState({
+          pageIndex: this.state.pageIndex + 1
+        });
+      }
+
     }
   }
-
+  servicesPage() {
+    this.setState({
+      pageIndex: this.state.pageIndex + 2
+    });
+  }
   render() {
     const {
       pageIndex,
+      home,
       symptoms,
+      services,
       phoneNumber,
       address,
       twoFactorCode
@@ -107,7 +158,9 @@ export default class AlertWorkflow extends React.Component {
 
     if (key === "requestAccepted") {
       Meteor.call("addViralRequest", {
+        home: mapValues(get("value"))(home),
         symptoms: mapValues(get("value"))(symptoms),
+        services: mapValues(get("value"))(services),
         ...address,
         phoneNumber,
         twoFactorCode
@@ -131,6 +184,25 @@ export default class AlertWorkflow extends React.Component {
           </div>
 
           <div>
+            {key === "home" ? (
+              <HomeStep
+                home={home}
+                onClick={homeId => {
+                  this.setState(state => {
+                    state.home[homeId].value = !state.home[homeId].value;
+                    return state;
+                  });
+                  if (homeId === "report") {
+                    this.nextPage();
+                  } else {
+                    this.servicesPage();
+                  }
+                }}
+              />
+            ) : (
+                ""
+              )}
+
             {key === "symptoms" ? (
               <SymptomsStep
                 symptoms={symptoms}
@@ -143,9 +215,22 @@ export default class AlertWorkflow extends React.Component {
                 }}
               />
             ) : (
-              null
-            )}
-
+                null
+              )}
+            {key === "services" ? (
+              <ServicesStep
+                services={services}
+                onClick={serviceId => {
+                  this.setState(state => {
+                    state.services[serviceId].value = !state.services[serviceId]
+                      .value;
+                    return state;
+                  });
+                }}
+              />
+            ) : (
+                null
+              )}
             {key === "location" ? (
               <LocationStep
                 location={
@@ -170,7 +255,6 @@ export default class AlertWorkflow extends React.Component {
                       "0.value"
                     )(countryData);
                     state.address.countryCode = countryCode;
-
                     return state;
                   });
                 }}
@@ -179,8 +263,8 @@ export default class AlertWorkflow extends React.Component {
                 }}
               />
             ) : (
-              null
-            )}
+                null
+              )}
 
             {key === "phoneNumber" ? (
               <PhoneNumberStep
@@ -193,8 +277,8 @@ export default class AlertWorkflow extends React.Component {
                 }}
               />
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             {key === "twoFactorAuth" ? (
               <TwoFactorAuthStep
@@ -203,18 +287,16 @@ export default class AlertWorkflow extends React.Component {
                   this.setState(state => {
                     state.succesfullyAuthenticated = approved;
                     state.twoFactorCode = twoFactorCode;
-
                     return state;
                   });
-
                   if (approved) {
                     this.nextPage();
                   }
                 }}
               />
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             {key === "addressForm" ? (
               <AddressStep
@@ -227,8 +309,8 @@ export default class AlertWorkflow extends React.Component {
                 }}
               />
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             {key === "requestAccepted" ? <RequestAccepted /> : ""}
           </div>
