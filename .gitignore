@@ -2,3 +2,5 @@ node_modules/
 .idea
 mongo
 package.json
+imports/credentials/twilio/credentials.json
+imports/credentials/twilio/credentials.json
