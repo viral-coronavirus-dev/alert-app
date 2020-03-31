@@ -1,0 +1,52 @@
+{
+  "name": "corona-virus-alert-app",
+  "private": true,
+  "scripts": {
+    "run-with-twilio": "TWILIO_ENABLED=true meteor run --port 4000",
+    "start": "TWILIO_ENABLED=false meteor run --settings settings.json",
+    "test": "meteor test --once --driver-package meteortesting:mocha",
+    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "visualize": "meteor --production --extra-packages bundle-visualizer",
+    "deploy": "DEPLOY_HOSTNAME=ap-southeast-2.galaxy-deploy.meteor.com meteor deploy app.viralsupport.me --owner viralcoronavirus --settings private/settings/prod-settings.json"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.7.6",
+    "core-js": "^3.6.4",
+    "country-iso-3-to-2": "^1.1.0",
+    "is-email": "^1.0.0",
+    "lodash": "^4.17.15",
+    "meteor-node-stubs": "^1.0.0",
+    "phone": "^2.4.4",
+    "rc-steps": "^3.5.0",
+    "react": "^16.9.0",
+    "react-alert": "^6.0.0",
+    "react-alert-template-basic": "^1.0.0",
+    "react-dom": "^16.9.0",
+    "react-phone-number-input": "^3.0.17",
+    "react-select": "^3.0.8",
+    "react-select-country-list": "^2.1.2",
+    "tailwindcss": "^1.1.4",
+    "twilio": "^3.39.3"
+  },
+  "devDependencies": {
+    "@types/meteor": "^1.4.30",
+    "@types/mocha": "^5.2.7",
+    "postcss": "^6.0.23",
+    "postcss-import": "^12.0.1",
+    "postcss-load-config": "^1.2.0",
+    "typescript": "^3.6.3"
+  },
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.tsx",
+      "server": "server/main.ts"
+    },
+    "testModule": "tests/main.ts"
+  },
+  "postcss": {
+    "plugins": {
+      "postcss-import": {},
+      "tailwindcss": {}
+    }
+  }
+}
