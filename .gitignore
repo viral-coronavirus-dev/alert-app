@@ -5,3 +5,4 @@ package.json
 imports/credentials/twilio/credentials.json
 imports/credentials/twilio/credentials.json
 imports/credentials/twilio/verification-service.json
+settings.json
