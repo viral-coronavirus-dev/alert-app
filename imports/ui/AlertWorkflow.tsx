@@ -117,8 +117,7 @@ export default class AlertWorkflow extends React.Component {
       country: "",
       countryCode: "",
       emailAddress: ""
-    },
-    isActive: true
+    }
   };
 
   nextPage(isDisabled: boolean) {
@@ -149,8 +148,7 @@ export default class AlertWorkflow extends React.Component {
       services,
       phoneNumber,
       address,
-      twoFactorCode,
-      isActive
+      twoFactorCode
     } = this.state;
     const currentStep = steps[pageIndex];
     const { key, isContinueDisabled, hideContinue } = currentStep;
@@ -171,7 +169,7 @@ export default class AlertWorkflow extends React.Component {
 
     return (
 
-      <div className={`fixed bottom-0 inset-y-auto text-black w-screen ${isActive ? "" : "hidden"}`}>
+      <div className={"fixed bottom-0 inset-y-auto text-black w-screen"}>
         <div
           className={
             "bg-white mb-10 lg:mb-0 mx-auto p-3 lg:p-5 shadow rounded-lg rounded-b-none lg:rounded-full lg:rounded-b-none"
