@@ -6,7 +6,7 @@ import AlertWorkflow from './AlertWorkflow'
 import VolunteerWorkflow from './VolunteerWorkflow'
 import DonateTodayButton from './DonateTodayButton'
 import VolunteerButton from './VolunteerButton'
-
+import HomeButton from './HomeButton'
 export default () => {
 
   const [flow, setFlow] = useState('alert')
@@ -18,11 +18,13 @@ export default () => {
       <ViralLogo clickCallback={() => {
         setFlow('alert');
       }} />
-      <VolunteerButton clickCallback={() => {
-        setFlow('vol');
-      }} />
       <DonateTodayButton />
       {flow === 'alert' ? <AlertWorkflow /> : <VolunteerWorkflow />}
+      {flow === 'alert' ? <VolunteerButton clickCallback={() => {
+        setFlow('vol');
+      }} /> : <HomeButton clickCallback={() => {
+        setFlow('alert');
+      }} />}
     </div>
   )
 }
