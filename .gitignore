@@ -1,5 +1,7 @@
 node_modules/
 .idea
 mongo
-imports/credentials/twilio/verification-service.json
 imports/credentials/twilio/credentials.json
+imports/credentials/twilio/credentials.json
+imports/credentials/twilio/verification-service.json
+settings.json
