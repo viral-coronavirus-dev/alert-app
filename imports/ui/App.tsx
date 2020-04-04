@@ -17,14 +17,12 @@ export default () => {
       <WhiteTransparentFade />
       <ViralLogo clickCallback={() => {
         setFlow('alert');
-      }}/>
+      }} />
       <VolunteerButton clickCallback={() => {
         setFlow('vol');
       }} />
       <DonateTodayButton />
-      {flow === 'alert' ? <AlertWorkflow /> : <div>volunteer flow</div>}
-
-      <VolunteerWorkflow />
+      {flow === 'alert' ? <AlertWorkflow /> : <VolunteerWorkflow />}
     </div>
   )
 }

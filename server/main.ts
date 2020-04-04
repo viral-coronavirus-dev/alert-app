@@ -12,7 +12,8 @@ const twilioClient = twilio(
   twilioCredentials.auth_token
 );
 
-const runTwilio = process.env["TWILIO_ENABLED"] || Meteor.settings["TWILIO_ENABLED"];
+const runTwilio =
+  process.env["TWILIO_ENABLED"] || Meteor.settings["TWILIO_ENABLED"];
 
 // TODO: npm run start-with-twilio
 const checkTwilioToken = async ({ phoneNumber, code }) => {
@@ -24,7 +25,7 @@ const checkTwilioToken = async ({ phoneNumber, code }) => {
   const alreadyApproved = AuthenticatedTokens.findOne({
     phoneNumber,
     code,
-    isApproved: true
+    isApproved: true,
   });
 
   if (alreadyApproved && alreadyApproved.isApproved) {
@@ -41,7 +42,7 @@ const checkTwilioToken = async ({ phoneNumber, code }) => {
     AuthenticatedTokens.insert({
       phoneNumber,
       code,
-      isApproved
+      isApproved,
     });
   }
 
@@ -49,7 +50,7 @@ const checkTwilioToken = async ({ phoneNumber, code }) => {
 };
 
 Meteor.methods({
-  sendVerificationToken: async to => {
+  sendVerificationToken: async (to) => {
     check(to, String);
 
     if (!runTwilio) {
@@ -60,22 +61,22 @@ Meteor.methods({
       .services(verificationService.sid)
       .verifications.create({ to, channel: "sms" });
   },
-  checkVerificationToken: async data => {
+  checkVerificationToken: async (data) => {
     check(data, {
       phoneNumber: String,
-      code: String
+      code: String,
     });
 
     return await checkTwilioToken(data);
   },
-  addViralRequest: async data => {
+  addViralRequest: async (data) => {
     check(data, {
       symptoms: {
         fever: Boolean,
         cough: Boolean,
         shortness_of_breath: Boolean,
         runny_nose: Boolean,
-        sore_throat: Boolean
+        sore_throat: Boolean,
       },
       fullName: String,
       address: String,
@@ -84,7 +85,7 @@ Meteor.methods({
       countryCode: String,
       emailAddress: String,
       twoFactorCode: String,
-      phoneNumber: String
+      phoneNumber: String,
     });
 
     const { phoneNumber, twoFactorCode } = data;
@@ -99,5 +100,5 @@ Meteor.methods({
 
       return { approved: result.approved };
     }
-  }
+  },
 });
