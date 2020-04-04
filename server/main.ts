@@ -12,7 +12,7 @@ const twilioClient = twilio(
   twilioCredentials.auth_token
 );
 
-const runTwilio = process.env["TWILIO_ENABLED"];
+const runTwilio = process.env["TWILIO_ENABLED"] || Meteor.settings["TWILIO_ENABLED"];
 
 // TODO: npm run start-with-twilio
 const checkTwilioToken = async ({ phoneNumber, code }) => {

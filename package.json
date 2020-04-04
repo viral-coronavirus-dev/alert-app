@@ -2,8 +2,8 @@
   "name": "corona-virus-alert-app",
   "private": true,
   "scripts": {
-    "run-with-twilio": "TWILIO_ENABLED=true meteor run --port 4000",
-    "start": "TWILIO_ENABLED=false meteor run --settings settings.json",
+    "run-with-twilio": "meteor run --port 4000 --settings settings.dev.twilio.json",
+    "start": "meteor run --settings settings.json",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer",
