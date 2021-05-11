@@ -14,7 +14,7 @@
     "core-js": "^3.6.4",
     "country-iso-3-to-2": "^1.1.0",
     "is-email": "^1.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "meteor-node-stubs": "^1.0.0",
     "phone": "^2.4.4",
     "rc-steps": "^3.5.0",
