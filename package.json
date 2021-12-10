@@ -13,7 +13,7 @@
     "@babel/runtime": "^7.7.6",
     "core-js": "^3.6.4",
     "country-iso-3-to-2": "^1.1.0",
-    "is-email": "^1.0.0",
+    "is-email": "^1.0.1",
     "lodash": "^4.17.15",
     "meteor-node-stubs": "^1.0.0",
     "phone": "^2.4.4",
